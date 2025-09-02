@@ -1,0 +1,61 @@
+{
+  "info": {
+    "name": "DVWA Demo (5ATTACK)",
+    "_postman_id": "3b3ac8a0-fb8d-4d24-8c3e-5c1a5e2ff001",
+    "description": "Minimal collection to show custom headers and query params against DVWA (running on http://127.0.0.1).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Home with custom header",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-5ATTACK-Demo",
+            "value": "true"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1/",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET with query param (id)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1/?id=1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "path": [
+            ""
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

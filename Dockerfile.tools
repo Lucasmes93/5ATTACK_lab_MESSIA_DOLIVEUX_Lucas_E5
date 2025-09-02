@@ -1,0 +1,33 @@
+
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Installer tous les outils nécessaires pour WSL
+RUN apt-get update && \
+    apt-get install -y \
+        bash \
+        curl \
+        wget \
+        nmap \
+        nikto \
+        nodejs npm \
+        python3 \
+        python3-pip \
+        procps \
+        net-tools \
+    && npm install -g newman \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# S'assurer que bash est le shell par défaut
+RUN ln -sf /bin/bash /bin/sh
+
+# Créer le répertoire de travail
+WORKDIR /workspace
+
+# Copier les scripts
+COPY *.sh ./
+COPY *.json ./
+
+# Rendre les scripts exécutables
+RUN chmod +x *.sh
