@@ -30,4 +30,4 @@ Write-Host "   Tapez 'exit' pour quitter le conteneur" -ForegroundColor White
 Write-Host ""
 
 # Démarrer le conteneur d'outils
-podman run -it --rm --pod weblab --name tools -v $PWD:/workspace weblab-tools /bin/sh
+podman run -it --rm --pod weblab --name tools -v ${PWD}:/workspace weblab-tools /bin/sh
