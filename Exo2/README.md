@@ -18,7 +18,9 @@ Exo2/
 ├── vulnerable_fixed.php       # Script sécurisé
 ├── exploit.html               # Page d'exploitation interactive
 ├── start_attack_server.ps1    # Script PowerShell
-└── start_attack_server.sh     # Script Bash
+├── start_attack_server.sh     # Script Bash
+├── setup_exo2.ps1            # Script de démarrage PowerShell
+└── setup_exo2.sh             # Script de démarrage Bash
 ```
 
 ### 🔧 Scripts principaux
@@ -34,14 +36,18 @@ Exo2/
 - Python 3.x installé
 - Navigateur web moderne
 
-### Étape 1 : Démarrer DVWA
+### Étape 1 : Démarrer DVWA avec Podman Desktop
 ```powershell
-# Démarrer DVWA avec Docker Compose
-podman-compose up -d
+# Option 1 : Script PowerShell (recommandé)
+.\setup_exo2.ps1
 
-# Vérifier que DVWA est accessible
-# Ouvrir http://localhost:8080 dans le navigateur
-# Identifiants : admin / password
+# Option 2 : Script Bash
+bash setup_exo2.sh
+
+# Option 3 : Commandes manuelles
+podman pod create --name exo2-cors -p 8080:80 -p 3306:3306
+podman run -d --pod exo2-cors --name mysql-cors -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=dvwa -e MYSQL_USER=user -e MYSQL_PASSWORD=password mysql:5.7
+podman run -d --pod exo2-cors --name dvwa-cors -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=dvwa -e MYSQL_USER=user -e MYSQL_PASSWORD=password vulnerables/web-dvwa
 ```
 
 ### Étape 2 : Configurer DVWA
@@ -153,15 +159,18 @@ Pour la démonstration, suivez les étapes dans `CORS_ATTACK_LAB.md` :
 ## 🔧 Dépannage
 
 ### Problèmes courants
-1. **DVWA non accessible** : Vérifier que `podman-compose up -d` a fonctionné
+1. **DVWA non accessible** : Vérifier que `.\setup_exo2.ps1` a fonctionné
 2. **Python non trouvé** : Installer Python depuis https://python.org
 3. **Attaque échoue** : Vérifier que vous êtes connecté à DVWA dans un autre onglet
 4. **Port 8000 occupé** : Changer le port dans `start_attack_server.ps1`
+5. **Podman non trouvé** : Installer Podman Desktop depuis https://podman-desktop.io
 
 ### Solutions
-- Vérifier les logs des conteneurs : `podman logs dvwa`
+- Vérifier les logs des conteneurs : `podman logs dvwa-cors`
 - Tester l'accès DVWA : `curl http://localhost:8080`
 - Vérifier les ports : `netstat -an | findstr :8000`
+- Vérifier le pod : `podman pod ps`
+- Redémarrer les services : `podman pod restart exo2-cors`
 
 ## 📚 Documentation complète
 
