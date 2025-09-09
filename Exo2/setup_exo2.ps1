@@ -1,28 +1,22 @@
 # Script PowerShell pour l'Exercice 2 - Attaque CORS
 Write-Host "=== Setup Exercice 2 - Attaque CORS ===" -ForegroundColor Green
 
-# Vérifier que podman-compose est disponible
-Write-Host "[0/4] Vérification de podman-compose..." -ForegroundColor Yellow
-try {
-    $composeVersion = podman-compose --version 2>&1
-    Write-Host "✅ Podman Compose trouvé: $composeVersion" -ForegroundColor Green
-} catch {
-    Write-Host "❌ Podman Compose non trouvé. Installation requise." -ForegroundColor Red
-    Write-Host "Installez podman-compose depuis: https://github.com/containers/podman-compose" -ForegroundColor Yellow
-    exit 1
-}
-
 # Nettoyer les anciens conteneurs
-Write-Host "[1/4] Nettoyage des anciens conteneurs..." -ForegroundColor Yellow
-podman-compose down 2>$null
+Write-Host "[0/4] Nettoyage des anciens conteneurs..." -ForegroundColor Yellow
+podman pod rm -f exo2-cors 2>$null
+podman container rm -f dvwa-cors 2>$null
 
-# Démarrer les services avec docker-compose.yml
-Write-Host "[2/4] Démarrage de DVWA avec podman-compose..." -ForegroundColor Yellow
-podman-compose up -d
+# Créer le pod pour l'Exercice 2
+Write-Host "[1/4] Création du pod exo2-cors..." -ForegroundColor Yellow
+podman pod create --name exo2-cors -p 8080:80
 
-# Attendre que les services soient prêts
-Write-Host "[3/4] Attente du démarrage des services..." -ForegroundColor Yellow
-Start-Sleep -Seconds 20
+# Démarrer DVWA
+Write-Host "[2/4] Démarrage de DVWA..." -ForegroundColor Yellow
+podman run -d --pod exo2-cors --name dvwa-cors vulnerables/web-dvwa
+
+# Attendre que DVWA soit prêt
+Write-Host "[3/4] Attente du démarrage de DVWA..." -ForegroundColor Yellow
+Start-Sleep -Seconds 15
 
 # Vérifier que DVWA est accessible
 Write-Host "[4/4] Vérification de l'accès à DVWA..." -ForegroundColor Yellow
