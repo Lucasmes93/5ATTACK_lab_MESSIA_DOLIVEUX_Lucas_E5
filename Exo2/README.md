@@ -13,7 +13,6 @@ Démontrer comment une mauvaise configuration CORS peut permettre à un site mal
 Exo2/
 ├── README.md                   # Ce fichier
 ├── CORS_ATTACK_LAB.md         # Documentation détaillée
-├── DEMO_STEPS.md              # Guide de démonstration
 ├── docker-compose.yml         # Configuration DVWA
 ├── vulnerable.php             # Script vulnérable à CORS
 ├── vulnerable_fixed.php       # Script sécurisé
@@ -145,9 +144,9 @@ header("Access-Control-Allow-Credentials: true");
 
 ## 🎬 Guide de démonstration
 
-Le fichier `DEMO_STEPS.md` contient :
-- 15+ étapes à capturer en images
-- Commentaires pour chaque capture d'écran
+Pour la démonstration, suivez les étapes dans `CORS_ATTACK_LAB.md` :
+- Instructions détaillées étape par étape
+- Capture d'écran des résultats
 - Script de démonstration
 - Points clés à mentionner
 
@@ -167,7 +166,7 @@ Le fichier `DEMO_STEPS.md` contient :
 ## 📚 Documentation complète
 
 - **`CORS_ATTACK_LAB.md`** : Documentation technique détaillée
-- **`DEMO_STEPS.md`** : Guide de démonstration avec captures d'écran
+- **`QUESTIONS_REPONSES.md`** : Réponses aux questions de l'exercice
 - **`vulnerable.php`** : Code source du script vulnérable
 - **`vulnerable_fixed.php`** : Code source du script sécurisé
 
