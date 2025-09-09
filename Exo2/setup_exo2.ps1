@@ -51,4 +51,5 @@ Write-Host "   5. Démarrer le serveur d'attaque : .\start_attack_server.ps1" -F
 Write-Host "   6. Ouvrir http://localhost:8000/exploit.html" -ForegroundColor White
 Write-Host ""
 Write-Host "📋 Pour arrêter les services :" -ForegroundColor Cyan
-Write-Host "   podman-compose down" -ForegroundColor White
+Write-Host "   podman pod stop exo2-cors" -ForegroundColor White
+Write-Host "   podman pod rm exo2-cors" -ForegroundColor White
