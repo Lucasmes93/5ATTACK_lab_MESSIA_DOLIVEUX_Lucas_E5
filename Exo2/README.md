@@ -12,8 +12,7 @@ Démontrer comment une mauvaise configuration CORS peut permettre à un site mal
 ```
 Exo2/
 ├── README.md                   # Ce fichier
-├── CORS_ATTACK_LAB.md         # Documentation détaillée
-├── docker-compose.yml         # Configuration DVWA
+├── QUESTIONS_REPONSES.md       # Réponses aux questions
 ├── vulnerable.php             # Script vulnérable à CORS
 ├── vulnerable_fixed.php       # Script sécurisé
 ├── exploit.html               # Page d'exploitation interactive
@@ -27,7 +26,7 @@ Exo2/
 - **`vulnerable.php`** : Script PHP avec CORS dangereux (`Access-Control-Allow-Origin: *`)
 - **`vulnerable_fixed.php`** : Version sécurisée avec origines restreintes
 - **`exploit.html`** : Page malveillante pour démontrer l'attaque
-- **`docker-compose.yml`** : Configuration DVWA avec base de données MySQL
+- **`setup_exo2.ps1`** : Script de démarrage PowerShell avec Podman
 
 ## 🚀 Démarrage rapide
 
@@ -36,7 +35,7 @@ Exo2/
 - Python 3.x installé
 - Navigateur web moderne
 
-### Étape 1 : Démarrer DVWA avec podman-compose
+### Étape 1 : Démarrer DVWA avec Podman
 ```powershell
 # Option 1 : Script PowerShell (recommandé)
 .\setup_exo2.ps1
@@ -45,7 +44,8 @@ Exo2/
 bash setup_exo2.sh
 
 # Option 3 : Commandes manuelles
-podman-compose up -d
+podman pod create --name exo2-cors -p 8080:80
+podman run -d --pod exo2-cors --name dvwa-cors vulnerables/web-dvwa
 ```
 
 ### Étape 2 : Configurer DVWA
@@ -148,7 +148,7 @@ header("Access-Control-Allow-Credentials: true");
 
 ## 🎬 Guide de démonstration
 
-Pour la démonstration, suivez les étapes dans `CORS_ATTACK_LAB.md` :
+Pour la démonstration, suivez les étapes dans ce README :
 - Instructions détaillées étape par étape
 - Capture d'écran des résultats
 - Script de démonstration
@@ -164,15 +164,14 @@ Pour la démonstration, suivez les étapes dans `CORS_ATTACK_LAB.md` :
 5. **Podman-compose non trouvé** : Installer depuis https://github.com/containers/podman-compose
 
 ### Solutions
-- Vérifier les logs des conteneurs : `podman-compose logs`
+- Vérifier les logs des conteneurs : `podman logs dvwa-cors`
 - Tester l'accès DVWA : `curl http://localhost:8080`
 - Vérifier les ports : `netstat -an | findstr :8000`
-- Vérifier les services : `podman-compose ps`
-- Redémarrer les services : `podman-compose restart`
+- Vérifier les services : `podman ps`
+- Redémarrer les services : `podman pod restart exo2-cors`
 
 ## 📚 Documentation complète
 
-- **`CORS_ATTACK_LAB.md`** : Documentation technique détaillée
 - **`QUESTIONS_REPONSES.md`** : Réponses aux questions de l'exercice
 - **`vulnerable.php`** : Code source du script vulnérable
 - **`vulnerable_fixed.php`** : Code source du script sécurisé
@@ -202,9 +201,9 @@ Cette démonstration est destinée uniquement à des fins éducatives. N'utilise
 ## 📞 Support
 
 En cas de problème, consultez :
-1. Le fichier `CORS_ATTACK_LAB.md` pour la documentation technique
-2. Le fichier `DEMO_STEPS.md` pour le guide de démonstration
-3. Les logs des conteneurs pour le diagnostic
+1. Ce README pour la documentation technique
+2. Les logs des conteneurs pour le diagnostic
+3. La section Dépannage ci-dessus
 
 ---
 
