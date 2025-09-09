@@ -1,45 +1,32 @@
 #!/bin/bash
-# Script Bash pour démarrer l'Exercice 2 avec Podman Desktop
+# Script Bash pour l'Exercice 2 - Attaque CORS
 
-echo "=== Setup Exercice 2 - Attaque CORS avec Podman Desktop ==="
+echo "=== Setup Exercice 2 - Attaque CORS ==="
+
+# Vérifier que podman-compose est disponible
+echo "[0/4] Vérification de podman-compose..."
+if command -v podman-compose &> /dev/null; then
+    echo "✅ Podman Compose trouvé: $(podman-compose --version)"
+else
+    echo "❌ Podman Compose non trouvé. Installation requise."
+    echo "Installez podman-compose depuis: https://github.com/containers/podman-compose"
+    exit 1
+fi
 
 # Nettoyer les anciens conteneurs
-echo "[0/6] Nettoyage des anciens conteneurs..."
-podman pod rm -f exo2-cors 2>/dev/null || true
-podman container rm -f dvwa-cors mysql-cors 2>/dev/null || true
+echo "[1/4] Nettoyage des anciens conteneurs..."
+podman-compose down 2>/dev/null || true
 
-# Créer le pod pour l'Exercice 2
-echo "[1/6] Création du pod exo2-cors..."
-podman pod create --name exo2-cors -p 8080:80 -p 3306:3306
+# Démarrer les services avec docker-compose.yml
+echo "[2/4] Démarrage de DVWA avec podman-compose..."
+podman-compose up -d
 
-# Démarrer MySQL
-echo "[2/6] Démarrage de MySQL..."
-podman run -d --pod exo2-cors --name mysql-cors \
-    -e MYSQL_ROOT_PASSWORD=password \
-    -e MYSQL_DATABASE=dvwa \
-    -e MYSQL_USER=user \
-    -e MYSQL_PASSWORD=password \
-    mysql:5.7
-
-# Attendre que MySQL soit prêt
-echo "[3/6] Attente du démarrage de MySQL..."
-sleep 15
-
-# Démarrer DVWA
-echo "[4/6] Démarrage de DVWA..."
-podman run -d --pod exo2-cors --name dvwa-cors \
-    -e MYSQL_ROOT_PASSWORD=password \
-    -e MYSQL_DATABASE=dvwa \
-    -e MYSQL_USER=user \
-    -e MYSQL_PASSWORD=password \
-    vulnerables/web-dvwa
-
-# Attendre que DVWA soit prêt
-echo "[5/6] Attente du démarrage de DVWA..."
+# Attendre que les services soient prêts
+echo "[3/4] Attente du démarrage des services..."
 sleep 20
 
-# Vérifier que les services sont accessibles
-echo "[6/6] Vérification des services..."
+# Vérifier que DVWA est accessible
+echo "[4/4] Vérification de l'accès à DVWA..."
 if curl -s http://localhost:8080 > /dev/null; then
     echo "✅ DVWA est accessible sur http://localhost:8080"
 else
@@ -62,5 +49,4 @@ echo "   5. Démarrer le serveur d'attaque : bash start_attack_server.sh"
 echo "   6. Ouvrir http://localhost:8000/exploit.html"
 echo ""
 echo "📋 Pour arrêter les services :"
-echo "   podman pod stop exo2-cors"
-echo "   podman pod rm exo2-cors"
+echo "   podman-compose down"
